@@ -1,0 +1,20 @@
+# Configuracao local do clasp: contem o scriptId do projeto. Nunca versionar.
+.clasp.json
+
+# Credenciais do clasp
+.clasprc.json
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Planilhas ou exports baixados para conferencia local
+*.xlsx
+*.csv
