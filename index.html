@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fazenda Reall · Painel de Custo da Obra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04060D; --surf:#0A1120; --surf2:#0D1526; --line:rgba(78,140,255,.16);
+  --cy:#21E6C1; --el:#4E8CFF; --am:#FFC24B; --cr:#FF4D6D; --vi:#A46BFF;
+  --txt:#DDE8F7; --mut:#7B90AE; --dim:#4E5F79;
+  --disp:'Orbitron','DejaVu Sans Condensed','Arial Narrow',sans-serif;
+  --ui:'Rajdhani','DejaVu Sans Condensed',system-ui,sans-serif;
+  --mono:'JetBrains Mono','DejaVu Sans Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:
+    radial-gradient(900px 520px at 12% -8%,rgba(33,230,193,.10),transparent 60%),
+    radial-gradient(1000px 600px at 88% 0%,rgba(78,140,255,.13),transparent 62%),
+    radial-gradient(700px 700px at 50% 120%,rgba(164,107,255,.08),transparent 60%),
+    var(--bg);
+  color:var(--txt);font-family:var(--ui);font-size:15px;min-height:100vh;
+  padding:22px 26px 40px;position:relative;overflow-x:hidden;
+}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(78,140,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(78,140,255,.055) 1px,transparent 1px);
+  background-size:46px 46px;mask-image:radial-gradient(circle at 50% 30%,#000 25%,transparent 78%)}
+.wrap{position:relative;z-index:1;max-width:1560px;margin:0 auto}
+
+.panel{position:relative;border-radius:14px;
+  background:linear-gradient(158deg,var(--surf2) 0%,var(--surf) 48%,#060B15 100%);
+  border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),inset 0 -14px 26px rgba(0,0,0,.55),0 18px 34px -14px rgba(0,0,0,.9)}
+.panel::after{content:'';position:absolute;left:16px;right:16px;top:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(33,230,193,.75),rgba(78,140,255,.4),transparent)}
+.corner{position:absolute;width:13px;height:13px;border:1px solid rgba(33,230,193,.5);opacity:.65}
+.corner.tl{top:7px;left:7px;border-right:0;border-bottom:0}
+.corner.br{bottom:7px;right:7px;border-left:0;border-top:0}
+.eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
+
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:16px}
+.sigil{width:52px;height:52px;flex:0 0 52px;border-radius:11px;background:linear-gradient(150deg,#123049,#081019);
+  border:1px solid rgba(33,230,193,.32);box-shadow:0 0 22px rgba(33,230,193,.24),inset 0 1px 0 rgba(255,255,255,.1);
+  display:grid;place-items:center}
+.sigil span{font-family:var(--disp);font-weight:900;font-size:19px;color:var(--cy);text-shadow:0 0 14px rgba(33,230,193,.9)}
+h1{font-family:var(--disp);font-weight:900;font-size:25px;letter-spacing:.15em;line-height:1;
+   background:linear-gradient(92deg,#EAF6FF,var(--cy) 55%,var(--el));-webkit-background-clip:text;background-clip:text;color:transparent;
+   filter:drop-shadow(0 0 16px rgba(33,230,193,.35))}
+.sub{margin-top:6px;font-size:13px;color:var(--mut)}
+.tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn{font-family:var(--ui);font-weight:600;font-size:13px;letter-spacing:.09em;text-transform:uppercase;
+  padding:11px 17px;border-radius:9px;cursor:pointer;color:#CFE3F5;background:linear-gradient(180deg,#152036,#0A1120);
+  border:1px solid rgba(78,140,255,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 5px 0 -2px rgba(2,5,12,.9),0 12px 20px -10px rgba(0,0,0,.95);
+  transition:transform .12s,box-shadow .12s,color .12s}
+.btn:hover{transform:translateY(-2px);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 7px 0 -2px rgba(2,5,12,.9),0 16px 26px -10px rgba(0,0,0,1),0 0 22px rgba(78,140,255,.3)}
+.btn:active{transform:translateY(1px)}
+.btn.pri{color:#031C18;background:linear-gradient(180deg,#4CF3D4,#12B49A);border-color:rgba(33,230,193,.7);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 5px 0 -2px #06584B,0 14px 26px -10px rgba(33,230,193,.6),0 0 30px rgba(33,230,193,.35)}
+.btn.pri:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 7px 0 -2px #06584B,0 18px 32px -10px rgba(33,230,193,.7),0 0 42px rgba(33,230,193,.5)}
+.btn:focus-visible{outline:2px solid var(--cy);outline-offset:3px}
+.sync{display:flex;align-items:center;gap:9px;padding:9px 14px;border-radius:9px;
+  background:linear-gradient(180deg,rgba(33,230,193,.09),rgba(6,12,22,.6));border:1px solid rgba(33,230,193,.26);
+  font-family:var(--mono);font-size:11px;color:#9FE9DA}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--cy);box-shadow:0 0 12px var(--cy);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+.alerts{display:grid;grid-template-columns:repeat(auto-fit,minmax(298px,1fr));gap:12px;margin-bottom:16px}
+.alert{padding:14px 16px 14px 18px;border-radius:11px;position:relative;overflow:hidden;
+  background:linear-gradient(140deg,rgba(255,194,75,.12),rgba(8,12,22,.85));border:1px solid rgba(255,194,75,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 12px 24px -14px rgba(0,0,0,.9)}
+.alert::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--am);box-shadow:0 0 16px var(--am)}
+.alert.crit{background:linear-gradient(140deg,rgba(255,77,109,.13),rgba(8,12,22,.85));border-color:rgba(255,77,109,.32)}
+.alert.crit::before{background:var(--cr);box-shadow:0 0 16px var(--cr)}
+.alert h4{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#FFE4B0;margin-bottom:5px}
+.alert.crit h4{color:#FFD3DC}
+.alert p{font-size:13.5px;color:#A9BCD4;line-height:1.45}
+.alert b{color:#EAF4FF;font-family:var(--mono);font-size:12.5px}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(206px,1fr));gap:13px;margin-bottom:16px}
+.kpi{padding:17px 18px 15px;border-radius:13px;position:relative;overflow:hidden;--acc:var(--el);
+  background:linear-gradient(160deg,#101B2E,#080E1A 60%,#05090F);border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -20px 30px rgba(0,0,0,.6),0 16px 30px -16px rgba(0,0,0,.95)}
+.kpi::after{content:'';position:absolute;top:0;left:14px;right:14px;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent)}
+.kpi.a{--acc:var(--cy)} .kpi.b{--acc:var(--vi)} .kpi.c{--acc:var(--am)} .kpi.d{--acc:var(--cr)}
+.kpi .lab{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase}
+.kpi .val{font-family:var(--mono);font-weight:700;font-size:25px;margin-top:9px;color:#F0F7FF;
+  text-shadow:0 0 22px color-mix(in srgb,var(--acc) 55%,transparent)}
+.kpi .val small{font-size:14px;color:var(--mut);font-weight:400}
+.kpi .foot{margin-top:8px;font-size:12.5px;color:var(--mut);display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:5px;
+  background:color-mix(in srgb,var(--acc) 16%,transparent);color:var(--acc);border:1px solid color-mix(in srgb,var(--acc) 34%,transparent)}
+.bar{height:4px;border-radius:3px;background:rgba(255,255,255,.06);margin-top:11px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--acc),color-mix(in srgb,var(--acc) 40%,#fff));box-shadow:0 0 12px var(--acc)}
+
+.main{display:grid;grid-template-columns:1.62fr 1fr;gap:15px;margin-bottom:15px}
+@media(max-width:1080px){.main{grid-template-columns:1fr}}
+.head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 18px 0}
+.head h3{font-family:var(--disp);font-size:14px;font-weight:700;letter-spacing:.17em;color:#D6E7FA;text-transform:uppercase}
+.legend{display:flex;gap:14px;font-family:var(--mono);font-size:10.5px;color:var(--mut)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+.chart{padding:52px 22px 16px;position:relative}
+.floor{position:absolute;left:22px;right:22px;bottom:44px;height:120px;pointer-events:none;
+  background-image:linear-gradient(rgba(78,140,255,.2) 1px,transparent 1px),linear-gradient(90deg,rgba(78,140,255,.14) 1px,transparent 1px);
+  background-size:100% 26px,42px 100%;transform:perspective(420px) rotateX(66deg);transform-origin:bottom;opacity:.75;
+  mask-image:linear-gradient(#000,transparent 85%)}
+.cols{display:flex;align-items:flex-end;gap:20px;height:238px;position:relative;padding-left:8px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.stack{position:relative;width:100%;max-width:44px;display:flex;flex-direction:column;justify-content:flex-end}
+.seg{position:relative;width:100%;border-radius:2px 2px 0 0;
+  background:linear-gradient(178deg,color-mix(in srgb,var(--c) 92%,#fff) 0%,var(--c) 22%,color-mix(in srgb,var(--c) 55%,#04070E) 100%);
+  box-shadow:0 0 26px -4px color-mix(in srgb,var(--c) 70%,transparent),inset 1px 0 0 rgba(255,255,255,.22)}
+.seg::before{content:'';position:absolute;top:-9px;left:5px;width:100%;height:9px;
+  background:color-mix(in srgb,var(--c) 78%,#fff);transform:skewX(-45deg);
+  box-shadow:0 0 20px color-mix(in srgb,var(--c) 85%,transparent)}
+.seg::after{content:'';position:absolute;top:-9px;right:-9px;width:9px;height:100%;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--c) 46%,#000),color-mix(in srgb,var(--c) 18%,#000));transform:skewY(-45deg)}
+.cap{position:absolute;top:-38px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;color:#CFE6F7;white-space:nowrap}
+.xlab{margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--mut);text-transform:uppercase;text-align:center}
+.xlab b{display:block;color:var(--dim);font-size:9px;font-weight:400}
+
+.cats{padding:16px 18px 20px;display:flex;flex-direction:column;gap:12px}
+.cat .r1{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:6px}
+.cat .r1 em{font-family:var(--mono);font-style:normal;color:#EAF4FF;font-size:12.5px}
+.track{height:11px;border-radius:6px;background:rgba(255,255,255,.05);position:relative;overflow:hidden;box-shadow:inset 0 2px 5px rgba(0,0,0,.8)}
+.track i{position:absolute;inset:0 auto 0 0;border-radius:6px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--c) 45%,#000),var(--c));
+  box-shadow:0 0 16px var(--c),inset 0 1px 0 rgba(255,255,255,.4)}
+.track i::after{content:'';position:absolute;right:0;top:0;bottom:0;width:2px;background:#fff;opacity:.85;box-shadow:0 0 10px #fff}
+
+.tabs{display:flex;gap:8px;padding:15px 18px 0}
+.tab{font-family:var(--ui);font-weight:600;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:9px 16px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--mut);
+  background:linear-gradient(180deg,#0C1424,#070C16);border:1px solid var(--line);border-bottom:0}
+.tab.on{color:#031C18;background:linear-gradient(180deg,#4CF3D4,#15B79E);border-color:rgba(33,230,193,.6);
+  box-shadow:0 -3px 22px rgba(33,230,193,.4)}
+.tbl-wrap{overflow:auto;max-height:470px;border-top:1px solid rgba(33,230,193,.25)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px}
+thead th{position:sticky;top:0;z-index:2;text-align:left;padding:11px 13px;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#8FA6C4;
+  background:linear-gradient(180deg,#0F1A2C,#0A1220);border-bottom:1px solid rgba(78,140,255,.3)}
+thead th.n{text-align:right}
+tbody tr:nth-child(even){background:rgba(78,140,255,.028)}
+tbody tr:hover{background:linear-gradient(90deg,rgba(33,230,193,.10),rgba(78,140,255,.05))}
+tbody td{padding:0;border-bottom:1px solid rgba(78,140,255,.08)}
+tbody td .cell{padding:9px 13px;color:#CBDCEF}
+tbody td input{width:100%;padding:9px 13px;background:transparent;border:0;color:#DCE8F7;font-family:var(--ui);font-size:13.5px;border-radius:6px}
+tbody td.n input{text-align:right;font-family:var(--mono);font-size:13px;color:#EAF4FF}
+tbody td input:focus{outline:0;background:rgba(33,230,193,.10);box-shadow:inset 0 0 0 1px rgba(33,230,193,.55),0 0 18px rgba(33,230,193,.22)}
+tbody td input.mono{font-family:var(--mono);font-size:12.5px}
+select{width:100%;padding:8px 11px;background:#0C1424;border:1px solid rgba(78,140,255,.2);color:#CBDCEF;
+  border-radius:7px;font-family:var(--ui);font-size:13px}
+select:focus{outline:0;border-color:var(--cy);box-shadow:0 0 16px rgba(33,230,193,.28)}
+.chip{display:inline-block;font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:5px;
+  background:color-mix(in srgb,var(--c) 15%,transparent);color:var(--c);border:1px solid color-mix(in srgb,var(--c) 32%,transparent)}
+.sw{width:44px;height:22px;border-radius:12px;background:#101A2B;border:1px solid rgba(78,140,255,.25);
+  position:relative;cursor:pointer;display:inline-block}
+.sw i{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#3E5474;transition:.16s}
+.sw.on{background:linear-gradient(90deg,#0E7F6C,#21E6C1);border-color:rgba(33,230,193,.6);box-shadow:0 0 16px rgba(33,230,193,.45)}
+.sw.on i{left:24px;background:#04211C;box-shadow:0 0 8px rgba(255,255,255,.6)}
+.del{width:26px;height:26px;border-radius:6px;background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.3);color:#FF8DA2;cursor:pointer;font-size:14px}
+.del:hover{background:rgba(255,77,109,.24);box-shadow:0 0 14px rgba(255,77,109,.4)}
+tfoot td{padding:13px;font-family:var(--mono);font-size:13px;color:#EAF4FF;
+  background:linear-gradient(180deg,#0B1424,#070C16);border-top:1px solid rgba(33,230,193,.3)}
+tfoot td.lb{letter-spacing:.16em;font-size:10px;color:var(--dim);text-transform:uppercase}
+tfoot td.n{text-align:right;font-weight:700;font-size:15px;text-shadow:0 0 18px rgba(33,230,193,.6)}
+footer{margin-top:16px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">
+    <div class="sigil"><span>FR</span></div>
+    <div>
+      <div class="eyebrow" style="margin-bottom:7px">Obra 001 · Casa de alto padrão · Lauro de Freitas / BA</div>
+      <h1>FAZENDA REALL</h1>
+      <div class="sub">Painel de custo da obra — lançamentos, recorrentes e resultado da venda</div>
+    </div>
+  </div>
+  <div class="tools">
+    <div class="sync" id="sync"><i class="dot"></i><span id="syncTxt">Iniciando…</span></div>
+    <button class="btn" id="btnNovo">+ Lançamento</button>
+    <button class="btn" id="btnExportar">Baixar backup</button>
+    <button class="btn" id="btnImportar">Restaurar backup</button>
+    <button class="btn pri" id="btnSalvar">Salvar</button>
+    <input type="file" id="arqImport" accept="application/json,.json" hidden>
+  </div>
+</header>
+
+<section class="alerts" id="alerts"></section>
+<section class="kpis" id="kpis"></section>
+
+<section class="main">
+  <div class="panel"><span class="corner tl"></span><span class="corner br"></span>
+    <div class="head"><h3>Desembolso mensal</h3>
+      <div class="legend">
+        <span><i style="background:#21E6C1;box-shadow:0 0 10px #21E6C1"></i>Lançamentos</span>
+        <span><i style="background:#4E8CFF;box-shadow:0 0 10px #4E8CFF"></i>Recorrentes pagos</span>
+      </div></div>
+    <div class="chart"><div class="floor"></div><div class="cols" id="cols"></div></div>
+  </div>
+  <div class="panel"><span class="corner tl"></span><span class="corner br"></span>
+    <div class="head"><h3>Custo por categoria</h3><span class="eyebrow">classificação a revisar</span></div>
+    <div class="cats" id="cats"></div>
+  </div>
+</section>
+
+<section class="panel"><span class="corner tl"></span>
+  <div class="tabs">
+    <div class="tab on" data-t="l">Lançamentos</div>
+    <div class="tab" data-t="r">Recorrentes</div>
+  </div>
+  <div id="viewL">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:50px">#</th><th style="width:120px">Data pgto</th><th>Item</th>
+          <th style="width:158px">Categoria</th><th style="width:104px">Tipo</th>
+          <th class="n" style="width:140px">Valor (R$)</th><th style="width:46px"></th></tr></thead>
+        <tbody id="tbL"></tbody>
+        <tfoot><tr><td class="lb" colspan="5">Total dos lançamentos</td><td class="n" id="ftL">—</td><td></td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+  <div id="viewR" style="display:none">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:110px">Mês ref.</th><th class="n" style="width:150px">Condomínio</th><th class="n" style="width:150px">Mensalidade</th>
+          <th class="n" style="width:140px">Água</th><th class="n" style="width:140px">Luz</th><th class="n" style="width:150px">Total do mês</th>
+          <th style="width:100px">Pago</th><th></th></tr></thead>
+        <tbody id="tbR"></tbody>
+        <tfoot><tr><td class="lb">Pago · entra no custo</td><td colspan="4"></td><td class="n" id="ftR">—</td><td></td><td></td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span id="rodapeOrigem">ORIGEM · dados embutidos neste arquivo · edições ficam salvas neste navegador</span>
+  <span>DADOS SENSÍVEIS · conferência humana obrigatória antes de qualquer decisão · <a href="#" id="btnLimpar" style="color:var(--mut);text-decoration:underline">descartar edições locais</a></span>
+</footer>
+</div>
+
+<script>
+const D = {"lanc": [{"id": 7, "data": "2025-03-01", "item": "Topografia", "cat": "Taxas/Projeto", "valor": 500.0, "tipo": "Realizado"}, {"id": 8, "data": "2025-03-01", "item": "Análise de Solo", "cat": "Taxas/Projeto", "valor": 1000.0, "tipo": "Realizado"}, {"id": 9, "data": "2025-03-19", "item": "Limpeza", "cat": "Serviços", "valor": 470.0, "tipo": "Realizado"}, {"id": 10, "data": "2025-03-01", "item": "Financiamento", "cat": "Taxas/Projeto", "valor": 30000.0, "tipo": "Realizado"}, {"id": 11, "data": "", "item": "Transferência de titularidade", "cat": "Taxas/Projeto", "valor": 0, "tipo": "Realizado"}, {"id": 12, "data": "2025-04-04", "item": "Arquitetura", "cat": "Taxas/Projeto", "valor": 4250.0, "tipo": "Realizado", "obs": "2.128,00 em mar/25 + 2.122,00 em abr/25 (dois pagamentos)"}, {"id": 13, "data": "2025-04-03", "item": "Bloco de cimento", "cat": "Material", "valor": 1970.0, "tipo": "Realizado"}, {"id": 14, "data": "2025-04-04", "item": "Terra planagem", "cat": "Serviços", "valor": 5100.0, "tipo": "Realizado"}, {"id": 15, "data": "2025-04-03", "item": "Ferragem", "cat": "Material", "valor": 5043.0, "tipo": "Realizado"}, {"id": 16, "data": "2025-04-08", "item": "Carreto", "cat": "Frete/Carreto", "valor": 350.0, "tipo": "Realizado"}, {"id": 17, "data": "2025-04-08", "item": "Vergalhão e outros", "cat": "Material", "valor": 283.83, "tipo": "Realizado"}, {"id": 18, "data": "2025-04-09", "item": "Bloco de cerâmica 8k", "cat": "Material", "valor": 6560.0, "tipo": "Realizado"}, {"id": 19, "data": "2025-04-09", "item": "Brita", "cat": "Material", "valor": 1400.0, "tipo": "Realizado"}, {"id": 20, "data": "2025-04-09", "item": "Areia", "cat": "Material", "valor": 1000.0, "tipo": "Realizado"}, {"id": 21, "data": "2025-04-10", "item": "Cabo e picareta", "cat": "Material", "valor": 86.98, "tipo": "Realizado"}, {"id": 22, "data": "2025-04-10", "item": "Tubo e outros", "cat": "Material", "valor": 79.95, "tipo": "Realizado"}, {"id": 23, "data": "2025-04-10", "item": "10 sacos de cimento", "cat": "Material", "valor": 370.0, "tipo": "Realizado"}, {"id": 24, "data": "2025-04-10", "item": "5 Barrote de Pinho", "cat": "Material", "valor": 95.0, "tipo": "Realizado"}, {"id": 25, "data": "2025-04-10", "item": "Taboas", "cat": "Material", "valor": 2315.0, "tipo": "Realizado"}, {"id": 26, "data": "2025-04-11", "item": "Caixa para embasa", "cat": "Material", "valor": 33.0, "tipo": "Realizado"}, {"id": 27, "data": "2025-04-11", "item": "Kit para Coelba - Poste", "cat": "Material", "valor": 191.45, "tipo": "Realizado"}, {"id": 28, "data": "2025-04-11", "item": "Ivani 4 diárias", "cat": "Mão de obra", "valor": 800.0, "tipo": "Realizado"}, {"id": 29, "data": "2025-04-11", "item": "George 4 Buracos", "cat": "Mão de obra", "valor": 360.0, "tipo": "Realizado"}, {"id": 30, "data": "2025-04-13", "item": "George 1 Buraco", "cat": "Mão de obra", "valor": 90.0, "tipo": "Realizado"}, {"id": 31, "data": "2025-04-15", "item": "George", "cat": "Mão de obra", "valor": 100.0, "tipo": "Realizado"}, {"id": 32, "data": "2025-04-15", "item": "Samuel", "cat": "Mão de obra", "valor": 70.0, "tipo": "Realizado"}, {"id": 33, "data": "2025-04-14", "item": "Aprovação de Arquitetura", "cat": "Taxas/Projeto", "valor": 759.0, "tipo": "Realizado"}, {"id": 34, "data": "2025-04-13", "item": "Alimentação George", "cat": "Mão de obra", "valor": 80.0, "tipo": "Realizado"}, {"id": 35, "data": "2025-04-15", "item": "15 sacos de cimento", "cat": "Material", "valor": 575.0, "tipo": "Realizado"}, {"id": 36, "data": "2025-04-15", "item": "Samuel", "cat": "Mão de obra", "valor": 290.0, "tipo": "Realizado"}, {"id": 37, "data": "2025-04-17", "item": "Nonato 4 1/2 diárias", "cat": "Mão de obra", "valor": 450.0, "tipo": "Realizado"}, {"id": 38, "data": "2025-04-17", "item": "George", "cat": "Mão de obra", "valor": 495.0, "tipo": "Realizado"}, {"id": 39, "data": "2025-04-15", "item": "Almoço", "cat": "Alimentação", "valor": 55.0, "tipo": "Realizado"}, {"id": 40, "data": "2025-04-22", "item": "15 sacos de cimento", "cat": "Material", "valor": 555.0, "tipo": "Realizado"}, {"id": 41, "data": "2025-04-22", "item": "Carreto", "cat": "Frete/Carreto", "valor": 40.0, "tipo": "Realizado"}, {"id": 42, "data": "2025-04-22", "item": "George 1 Díaria", "cat": "Mão de obra", "valor": 90.0, "tipo": "Realizado"}, {"id": 43, "data": "2025-04-22", "item": "George Credito", "cat": "Mão de obra", "valor": 40.0, "tipo": "Realizado"}, {"id": 44, "data": "2025-04-22", "item": "George Credito", "cat": "Mão de obra", "valor": 15.0, "tipo": "Realizado"}, {"id": 45, "data": "2025-04-22", "item": "Refeição", "cat": "Alimentação", "valor": 100.0, "tipo": "Realizado"}, {"id": 46, "data": "2025-04-25", "item": "Bloco de cerâmica 200", "cat": "Material", "valor": 226.0, "tipo": "Realizado"}, {"id": 47, "data": "2025-04-26", "item": "Gás", "cat": "Material", "valor": 125.0, "tipo": "Realizado"}, {"id": 48, "data": "2025-04-26", "item": "George Pagamento", "cat": "Mão de obra", "valor": 150.0, "tipo": "Realizado"}, {"id": 49, "data": "2025-04-26", "item": "Nonato 2 diárias", "cat": "Mão de obra", "valor": 200.0, "tipo": "Realizado"}, {"id": 50, "data": "2025-04-26", "item": "Ivani 5 diárias", "cat": "Mão de obra", "valor": 1000.0, "tipo": "Realizado"}, {"id": 51, "data": "2025-05-01", "item": "George Pagamento", "cat": "Mão de obra", "valor": 180.0, "tipo": "Realizado"}, {"id": 52, "data": "2025-04-29", "item": "10 sacos de cimento", "cat": "Material", "valor": 370.0, "tipo": "Realizado"}, {"id": 53, "data": "2025-05-01", "item": "Ivani 3 diárias", "cat": "Mão de obra", "valor": 600.0, "tipo": "Realizado"}, {"id": 54, "data": "2025-05-03", "item": "Material eletrico", "cat": "Material", "valor": 1500.0, "tipo": "Realizado"}, {"id": 55, "data": "2025-05-17", "item": "George Pagamento", "cat": "Mão de obra", "valor": 230.0, "tipo": "Realizado"}, {"id": 56, "data": "2025-05-23", "item": "Agua da vizinha", "cat": "Taxas/Projeto", "valor": 84.0, "tipo": "Realizado"}, {"id": 57, "data": "2025-06-01", "item": "Ivani 5 diárias", "cat": "Mão de obra", "valor": 1000.0, "tipo": "Realizado"}, {"id": 58, "data": "2025-05-30", "item": "George Pagamento", "cat": "Mão de obra", "valor": 500.0, "tipo": "Realizado"}, {"id": 59, "data": "2025-05-26", "item": "10 sacos de cimento", "cat": "Material", "valor": 410.0, "tipo": "Realizado"}, {"id": 60, "data": "2025-06-02", "item": "10 sacos de cimento", "cat": "Material", "valor": 410.0, "tipo": "Realizado"}, {"id": 61, "data": "2025-05-30", "item": "Agua", "cat": "Taxas/Projeto", "valor": 10.5, "tipo": "Realizado"}, {"id": 62, "data": "2025-06-20", "item": "Cimento", "cat": "Material", "valor": 493.0, "tipo": "Realizado"}, {"id": 63, "data": "2025-06-16", "item": "Ivani 3 diárias", "cat": "Mão de obra", "valor": 600.0, "tipo": "Realizado"}, {"id": 64, "data": "2025-06-11", "item": "Ivani 1 1/2 diárias", "cat": "Mão de obra", "valor": 300.0, "tipo": "Realizado"}, {"id": 65, "data": "2025-06-11", "item": "Cimento", "cat": "Material", "valor": 500.0, "tipo": "Realizado"}, {"id": 66, "data": "2025-06-13", "item": "George Pagamento", "cat": "Mão de obra", "valor": 100.0, "tipo": "Realizado"}, {"id": 67, "data": "2025-06-13", "item": "George Pagamento", "cat": "Mão de obra", "valor": 200.0, "tipo": "Realizado"}, {"id": 68, "data": "2025-06-19", "item": "Alvará", "cat": "Taxas/Projeto", "valor": 1811.98, "tipo": "Realizado"}, {"id": 69, "data": "2025-06-28", "item": "George Pagamento", "cat": "Mão de obra", "valor": 450.0, "tipo": "Realizado"}, {"id": 70, "data": "2025-06-28", "item": "George Pagamento", "cat": "Mão de obra", "valor": 650.0, "tipo": "Realizado"}, {"id": 71, "data": "2025-06-25", "item": "Pr. Pereira areia e brita", "cat": "Material", "valor": 2600.0, "tipo": "Realizado"}, {"id": 72, "data": "2025-07-03", "item": "Ivani", "cat": "Mão de obra", "valor": 450.0, "tipo": "Realizado"}, {"id": 73, "data": "2025-07-03", "item": "Cimento", "cat": "Material", "valor": 395.0, "tipo": "Realizado"}, {"id": 74, "data": "2025-07-06", "item": "Ivani", "cat": "Mão de obra", "valor": 1200.0, "tipo": "Realizado"}, {"id": 75, "data": "2025-07-06", "item": "George Pagamento", "cat": "Mão de obra", "valor": 500.0, "tipo": "Realizado"}, {"id": 76, "data": "2025-07-11", "item": "Cimento", "cat": "Material", "valor": 1850.0, "tipo": "Realizado"}, {"id": 77, "data": "2025-07-11", "item": "George Pagamento", "cat": "Mão de obra", "valor": 320.0, "tipo": "Realizado"}, {"id": 78, "data": "2025-07-11", "item": "Ivani", "cat": "Mão de obra", "valor": 1000.0, "tipo": "Realizado"}, {"id": 79, "data": "2025-07-06", "item": "George Pagamento", "cat": "Mão de obra", "valor": 300.0, "tipo": "Realizado"}, {"id": 80, "data": "2025-07-15", "item": "Ferragem", "cat": "Material", "valor": 2050.0, "tipo": "Realizado"}, {"id": 81, "data": "2025-07-18", "item": "Carreto", "cat": "Frete/Carreto", "valor": 300.0, "tipo": "Realizado"}, {"id": 82, "data": "2025-07-18", "item": "Ivani", "cat": "Mão de obra", "valor": 1000.0, "tipo": "Realizado"}, {"id": 83, "data": "2025-07-17", "item": "George Pagamento", "cat": "Mão de obra", "valor": 120.0, "tipo": "Realizado"}, {"id": 84, "data": "2025-07-18", "item": "George Pagamento", "cat": "Mão de obra", "valor": 580.0, "tipo": "Realizado"}, {"id": 85, "data": "2025-07-19", "item": "Ivani", "cat": "Mão de obra", "valor": 250.0, "tipo": "Realizado"}, {"id": 86, "data": "", "item": "Ferragem Pastor", "cat": "Material", "valor": 5000.0, "tipo": "Realizado"}, {"id": 87, "data": "2025-07-23", "item": "Areia", "cat": "Material", "valor": 1000.0, "tipo": "Realizado"}, {"id": 88, "data": "2025-07-23", "item": "Brita", "cat": "Material", "valor": 1600.0, "tipo": "Realizado"}, {"id": 89, "data": "2025-07-25", "item": "George", "cat": "Mão de obra", "valor": 30.0, "tipo": "Realizado"}, {"id": 90, "data": "2025-07-25", "item": "George", "cat": "Mão de obra", "valor": 530.0, "tipo": "Realizado"}, {"id": 91, "data": "2025-07-26", "item": "Ivani", "cat": "Mão de obra", "valor": 1200.0, "tipo": "Realizado"}, {"id": 92, "data": "2025-07-24", "item": "Pastor Jó", "cat": "Mão de obra", "valor": 450.0, "tipo": "Realizado"}, {"id": 93, "data": "2025-07-26", "item": "Karolaine Cimento 30 sacos", "cat": "Material", "valor": 1150.0, "tipo": "Realizado"}, {"id": 94, "data": "2025-08-02", "item": "Ivani", "cat": "Mão de obra", "valor": 1000.0, "tipo": "Realizado"}, {"id": 95, "data": "2025-08-02", "item": "Ivani", "cat": "Mão de obra", "valor": 300.0, "tipo": "Realizado"}, {"id": 96, "data": "2025-08-02", "item": "George", "cat": "Mão de obra", "valor": 570.0, "tipo": "Realizado"}, {"id": 97, "data": "2025-08-02", "item": "Joseliton", "cat": "Mão de obra", "valor": 100.0, "tipo": "Realizado"}, {"id": 98, "data": "2025-08-05", "item": "George", "cat": "Mão de obra", "valor": 50.0, "tipo": "Realizado"}, {"id": 99, "data": "2025-08-06", "item": "George", "cat": "Mão de obra", "valor": 200.0, "tipo": "Realizado"}, {"id": 100, "data": "2025-08-12", "item": "George", "cat": "Mão de obra", "valor": 30.0, "tipo": "Realizado"}, {"id": 101, "data": "2025-08-12", "item": "George", "cat": "Mão de obra", "valor": 70.0, "tipo": "Realizado"}, {"id": 102, "data": "2025-08-15", "item": "George", "cat": "Mão de obra", "valor": 250, "tipo": "Realizado"}, {"id": 103, "data": "2025-08-24", "item": "Tela de ferro", "cat": "Material", "valor": 543.6, "tipo": "Realizado"}, {"id": 104, "data": "2025-08-20", "item": "Carreto", "cat": "Frete/Carreto", "valor": 150.0, "tipo": "Realizado"}, {"id": 105, "data": "2025-08-08", "item": "Mangueira amarela", "cat": "Material", "valor": 149.7, "tipo": "Realizado"}, {"id": 106, "data": "2025-08-22", "item": "George", "cat": "Mão de obra", "valor": 300.0, "tipo": "Realizado"}, {"id": 107, "data": "2025-08-30", "item": "Ivani", "cat": "Mão de obra", "valor": 606.0, "tipo": "Realizado"}, {"id": 108, "data": "2025-08-30", "item": "Concreto, piso", "cat": "Material", "valor": 2650.0, "tipo": "Realizado"}, {"id": 109, "data": "2025-09-13", "item": "Chave de virar ferro", "cat": "Material", "valor": 40.0, "tipo": "Realizado"}, {"id": 110, "data": "2025-09-14", "item": "Almoço", "cat": "Alimentação", "valor": 213.37, "tipo": "Realizado"}, {"id": 111, "data": "2025-09-14", "item": "George", "cat": "Mão de obra", "valor": 90.0, "tipo": "Realizado"}, {"id": 112, "data": "2025-09-14", "item": "George", "cat": "Mão de obra", "valor": 500.0, "tipo": "Realizado"}, {"id": 113, "data": "2025-09-15", "item": "Cimento 19 sacos", "cat": "Material", "valor": 810.0, "tipo": "Realizado"}, {"id": 114, "data": "2025-09-19", "item": "Pr Jo", "cat": "Mão de obra", "valor": 300.0, "tipo": "Realizado"}, {"id": 115, "data": "2025-09-22", "item": "Pr Jo", "cat": "Mão de obra", "valor": 30.0, "tipo": "Realizado"}, {"id": 116, "data": "2025-09-27", "item": "Pr Jo", "cat": "Mão de obra", "valor": 550.0, "tipo": "Realizado"}, {"id": 117, "data": "2025-09-20", "item": "Ivani", "cat": "Mão de obra", "valor": 1000.0, "tipo": "Realizado"}, {"id": 118, "data": "2025-09-21", "item": "Ivani", "cat": "Mão de obra", "valor": 200.0, "tipo": "Realizado"}, {"id": 119, "data": "2025-09-27", "item": "Ivani", "cat": "Mão de obra", "valor": 1000.0, "tipo": "Realizado"}, {"id": 120, "data": "2025-10-02", "item": "Ferragem", "cat": "Material", "valor": 3520.0, "tipo": "Realizado"}, {"id": 121, "data": "2025-10-02", "item": "Carreto", "cat": "Frete/Carreto", "valor": 100.0, "tipo": "Realizado"}, {"id": 122, "data": "2025-10-02", "item": "caixa de esgoto", "cat": "Material", "valor": 70.0, "tipo": "Realizado"}, {"id": 123, "data": "2025-10-02", "item": "Ferragem", "cat": "Material", "valor": 292.0, "tipo": "Realizado"}, {"id": 124, "data": "2025-10-04", "item": "Pr Jo", "cat": "Mão de obra", "valor": 400.0, "tipo": "Realizado"}, {"id": 125, "data": "2025-10-03", "item": "Ivani", "cat": "Mão de obra", "valor": 1200.0, "tipo": "Realizado"}, {"id": 126, "data": "2025-10-08", "item": "Areia", "cat": "Material", "valor": 1100.0, "tipo": "Realizado"}, {"id": 127, "data": "2025-10-10", "item": "Cimento", "cat": "Material", "valor": 650.0, "tipo": "Realizado"}, {"id": 128, "data": "2025-10-11", "item": "Pr Jo", "cat": "Mão de obra", "valor": 500.0, "tipo": "Realizado"}, {"id": 129, "data": "2025-10-11", "item": "Ivani", "cat": "Mão de obra", "valor": 1257.0, "tipo": "Realizado"}, {"id": 130, "data": "2025-10-17", "item": "Pr Jo", "cat": "Mão de obra", "valor": 500.0, "tipo": "Realizado"}, {"id": 131, "data": "2025-10-17", "item": "Ivani", "cat": "Mão de obra", "valor": 1000.0, "tipo": "Realizado"}, {"id": 132, "data": "2025-10-18", "item": "Brita", "cat": "Material", "valor": 740.0, "tipo": "Realizado"}, {"id": 133, "data": "2025-10-17", "item": "Estronca", "cat": "Material", "valor": 152.0, "tipo": "Realizado"}, {"id": 134, "data": "2025-10-23", "item": "Laje", "cat": "Material", "valor": 5630.0, "tipo": "Realizado"}, {"id": 135, "data": "2025-10-29", "item": "Carreto", "cat": "Frete/Carreto", "valor": 300.0, "tipo": "Realizado"}, {"id": 136, "data": "2025-10-29", "item": "Carreto", "cat": "Frete/Carreto", "valor": 150.0, "tipo": "Realizado"}, {"id": 137, "data": "2025-10-28", "item": "Ferragem", "cat": "Material", "valor": 591.6, "tipo": "Realizado"}, {"id": 138, "data": "2025-11-01", "item": "Ivani", "cat": "Mão de obra", "valor": 1400.0, "tipo": "Realizado"}, {"id": 139, "data": "2025-11-01", "item": "Ivani", "cat": "Mão de obra", "valor": 1200.0, "tipo": "Realizado"}, {"id": 140, "data": "2025-11-06", "item": "Pr Jo", "cat": "Mão de obra", "valor": 25.0, "tipo": "Realizado"}, {"id": 141, "data": "2025-11-06", "item": "Pr Jo", "cat": "Mão de obra", "valor": 800.0, "tipo": "Realizado"}, {"id": 142, "data": "2025-11-01", "item": "Pr Jo", "cat": "Mão de obra", "valor": 200.0, "tipo": "Realizado"}, {"id": 143, "data": "2025-11-08", "item": "Pr Jo", "cat": "Mão de obra", "valor": 300.0, "tipo": "Realizado"}, {"id": 144, "data": "2025-11-08", "item": "Caixa de luz", "cat": "Material", "valor": 70.0, "tipo": "Realizado"}, {"id": 145, "data": "2025-11-08", "item": "Concreto", "cat": "Material", "valor": 5220.0, "tipo": "Realizado"}, {"id": 146, "data": "2025-11-10", "item": "Ivani", "cat": "Mão de obra", "valor": 200.0, "tipo": "Realizado"}, {"id": 147, "data": "2025-11-10", "item": "Pr Jo", "cat": "Mão de obra", "valor": 110.0, "tipo": "Realizado"}, {"id": 148, "data": "2025-11-02", "item": "Pr Jo", "cat": "Mão de obra", "valor": 50.0, "tipo": "Realizado"}, {"id": 149, "data": "2025-10-28", "item": "Pr Jo", "cat": "Mão de obra", "valor": 60.0, "tipo": "Realizado"}, {"id": 150, "data": "2025-11-24", "item": "Cimento 30 sacos", "cat": "Material", "valor": 1370.0, "tipo": "Realizado"}, {"id": 151, "data": "2025-10-28", "item": "Pr Jo", "cat": "Mão de obra", "valor": 60.0, "tipo": "Realizado"}, {"id": 152, "data": "2025-10-28", "item": "Ivani", "cat": "Mão de obra", "valor": 1100.0, "tipo": "Realizado"}, {"id": 153, "data": "2025-11-29", "item": "Vinicius - Ajudante", "cat": "Mão de obra", "valor": 200.0, "tipo": "Realizado"}, {"id": 154, "data": "2025-11-27", "item": "Pr Jo", "cat": "Mão de obra", "valor": 200.0, "tipo": "Realizado"}, {"id": 155, "data": "2025-12-06", "item": "Ivani", "cat": "Mão de obra", "valor": 1220.0, "tipo": "Realizado"}, {"id": 156, "data": "2025-12-05", "item": "Ferragem", "cat": "Material", "valor": 1086.0, "tipo": "Realizado"}, {"id": 157, "data": "2025-12-03", "item": "Ferragem", "cat": "Material", "valor": 1000.0, "tipo": "Realizado"}, {"id": 158, "data": "2025-12-06", "item": "Carreto Ferragem", "cat": "Material", "valor": 250.0, "tipo": "Realizado"}, {"id": 159, "data": "2025-12-07", "item": "Kloves - Ajudante", "cat": "Mão de obra", "valor": 300.0, "tipo": "Realizado"}, {"id": 160, "data": "2025-12-13", "item": "George", "cat": "Mão de obra", "valor": 400.0, "tipo": "Realizado"}, {"id": 161, "data": "2025-12-12", "item": "Ivani", "cat": "Mão de obra", "valor": 1200.0, "tipo": "Realizado"}, {"id": 162, "data": "2025-12-20", "item": "Ivani", "cat": "Mão de obra", "valor": 1200.0, "tipo": "Realizado"}, {"id": 163, "data": "2025-12-16", "item": "Cimento e estronca", "cat": "Material", "valor": 82.0, "tipo": "Realizado"}, {"id": 164, "data": "2025-12-16", "item": "George", "cat": "Mão de obra", "valor": 550.0, "tipo": "Realizado"}, {"id": 165, "data": "2025-12-26", "item": "George", "cat": "Mão de obra", "valor": 100.0, "tipo": "Realizado"}, {"id": 166, "data": "2026-01-08", "item": "George", "cat": "Mão de obra", "valor": 100.0, "tipo": "Realizado"}, {"id": 167, "data": "2026-01-10", "item": "George", "cat": "Mão de obra", "valor": 300.0, "tipo": "Realizado"}, {"id": 168, "data": "2025-12-29", "item": "George", "cat": "Mão de obra", "valor": 100.0, "tipo": "Realizado"}, {"id": 169, "data": "2026-01-09", "item": "Ivani", "cat": "Mão de obra", "valor": 1200.0, "tipo": "Realizado"}, {"id": 170, "data": "2026-01-10", "item": "Barrotinho - Carreto", "cat": "Material", "valor": 240.0, "tipo": "Realizado"}, {"id": 171, "data": "2026-01-11", "item": "Caixa de Luz e Arame", "cat": "Material", "valor": 85.0, "tipo": "Realizado"}, {"id": 172, "data": "2026-01-17", "item": "Ivani", "cat": "Mão de obra", "valor": 1200.0, "tipo": "Realizado"}, {"id": 173, "data": "2026-01-17", "item": "George", "cat": "Mão de obra", "valor": 600.0, "tipo": "Realizado"}, {"id": 174, "data": "2026-01-25", "item": "Concreto", "cat": "Material", "valor": 7000.0, "tipo": "Realizado"}, {"id": 175, "data": "2026-01-20", "item": "isopo laje", "cat": "Material", "valor": 375.0, "tipo": "Realizado"}, {"id": 176, "data": "2026-01-22", "item": "Aditivo chapisco", "cat": "Material", "valor": 35.0, "tipo": "Realizado"}, {"id": 177, "data": "2026-01-25", "item": "George", "cat": "Mão de obra", "valor": 100.0, "tipo": "Realizado"}, {"id": 178, "data": "2026-01-25", "item": "George", "cat": "Mão de obra", "valor": 200.0, "tipo": "Realizado"}, {"id": 179, "data": "2026-01-25", "item": "George", "cat": "Mão de obra", "valor": 500.0, "tipo": "Realizado"}, {"id": 180, "data": "2026-01-25", "item": "Ivani", "cat": "Mão de obra", "valor": 1200.0, "tipo": "Realizado"}, {"id": 181, "data": "2026-01-25", "item": "Ivani", "cat": "Mão de obra", "valor": 400.0, "tipo": "Realizado"}, {"id": 182, "data": "2026-03-10", "item": "IPTU", "cat": "Taxas/Projeto", "valor": 385.47, "tipo": "Realizado"}, {"id": 183, "data": "2026-03-04", "item": "Carreto (Devolução das estroncas)", "cat": "Material", "valor": 150.0, "tipo": "Realizado"}, {"id": 187, "data": "", "item": "Mão de Obra e outros", "cat": "Mão de obra", "valor": 20000.0, "tipo": "Provisão"}], "rec": [{"ym": "2025-03", "label": "MAR/25", "embasa": 0, "coelba": 0, "condominio": 203.18, "mensalidade": 862.34}, {"ym": "2025-04", "label": "ABR/25", "embasa": 0, "coelba": 0, "condominio": 198.45, "mensalidade": 862.34}, {"ym": "2025-05", "label": "MAI/25", "embasa": 0, "coelba": 0, "condominio": 205.86, "mensalidade": 862.34}, {"ym": "2025-06", "label": "JUN/25", "embasa": 0, "coelba": 0, "condominio": 198.45, "mensalidade": 862.34}, {"ym": "2025-07", "label": "JUL/25", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 862.34}, {"ym": "2025-08", "label": "AGO/25", "embasa": 108.9, "coelba": 0, "condominio": 265.53, "mensalidade": 862.34}, {"ym": "2025-09", "label": "SET/25", "embasa": 50.55, "coelba": 91.74, "condominio": 252.91, "mensalidade": 971.11}, {"ym": "2025-10", "label": "OUT/25", "embasa": 50.55, "coelba": 91.74, "condominio": 252.91, "mensalidade": 971.11}, {"ym": "2025-11", "label": "NOV/25", "embasa": 96.6, "coelba": 51.7, "condominio": 252.91, "mensalidade": 971.11}, {"ym": "2025-12", "label": "DEZ/25", "embasa": 96.6, "coelba": 110.83, "condominio": 252.91, "mensalidade": 971.11}, {"ym": "2026-01", "label": "JAN/26", "embasa": 96.6, "coelba": 110.83, "condominio": 252.91, "mensalidade": 971.11}, {"ym": "2026-02", "label": "FEV/26", "embasa": 96.6, "coelba": 110.83, "condominio": 252.91, "mensalidade": 971.11}, {"ym": "2026-03", "label": "MAR/26", "embasa": 32.6, "coelba": 110.83, "condominio": 252.91, "mensalidade": 971.11}, {"ym": "2026-04", "label": "ABR/26", "embasa": 32.6, "coelba": 110.83, "condominio": 252.91, "mensalidade": 971.11}, {"ym": "2026-05", "label": "MAI/26", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2026-06", "label": "JUN/26", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2026-07", "label": "JUL/26", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2026-08", "label": "AGO/26", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2026-09", "label": "SET/26", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2026-10", "label": "OUT/26", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2026-11", "label": "NOV/26", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2026-12", "label": "DEZ/26", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-01", "label": "JAN/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-02", "label": "FEV/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-03", "label": "MAR/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-04", "label": "ABR/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-05", "label": "MAI/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-06", "label": "JUN/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-07", "label": "JUL/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-08", "label": "AGO/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-09", "label": "SET/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-10", "label": "OUT/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-11", "label": "NOV/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2027-12", "label": "DEZ/27", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-01", "label": "JAN/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-02", "label": "FEV/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-03", "label": "MAR/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-04", "label": "ABR/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-05", "label": "MAI/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-06", "label": "JUN/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-07", "label": "JUL/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-08", "label": "AGO/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-09", "label": "SET/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-10", "label": "OUT/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-11", "label": "NOV/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2028-12", "label": "DEZ/28", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-01", "label": "JAN/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-02", "label": "FEV/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-03", "label": "MAR/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-04", "label": "ABR/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-05", "label": "MAI/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-06", "label": "JUN/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-07", "label": "JUL/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-08", "label": "AGO/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-09", "label": "SET/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-10", "label": "OUT/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-11", "label": "NOV/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2029-12", "label": "DEZ/29", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-01", "label": "JAN/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-02", "label": "FEV/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-03", "label": "MAR/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-04", "label": "ABR/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-05", "label": "MAI/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-06", "label": "JUN/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-07", "label": "JUL/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-08", "label": "AGO/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-09", "label": "SET/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-10", "label": "OUT/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-11", "label": "NOV/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2030-12", "label": "DEZ/30", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-01", "label": "JAN/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-02", "label": "FEV/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-03", "label": "MAR/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-04", "label": "ABR/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-05", "label": "MAI/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-06", "label": "JUN/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-07", "label": "JUL/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-08", "label": "AGO/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-09", "label": "SET/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-10", "label": "OUT/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-11", "label": "NOV/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2031-12", "label": "DEZ/31", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-01", "label": "JAN/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-02", "label": "FEV/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-03", "label": "MAR/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-04", "label": "ABR/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-05", "label": "MAI/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-06", "label": "JUN/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-07", "label": "JUL/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-08", "label": "AGO/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-09", "label": "SET/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-10", "label": "OUT/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-11", "label": "NOV/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2032-12", "label": "DEZ/32", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-01", "label": "JAN/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-02", "label": "FEV/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-03", "label": "MAR/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-04", "label": "ABR/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-05", "label": "MAI/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-06", "label": "JUN/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-07", "label": "JUL/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-08", "label": "AGO/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-09", "label": "SET/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-10", "label": "OUT/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-11", "label": "NOV/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2033-12", "label": "DEZ/33", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-01", "label": "JAN/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-02", "label": "FEV/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-03", "label": "MAR/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-04", "label": "ABR/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-05", "label": "MAI/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-06", "label": "JUN/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-07", "label": "JUL/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-08", "label": "AGO/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-09", "label": "SET/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-10", "label": "OUT/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-11", "label": "NOV/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2034-12", "label": "DEZ/34", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-01", "label": "JAN/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-02", "label": "FEV/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-03", "label": "MAR/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-04", "label": "ABR/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-05", "label": "MAI/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-06", "label": "JUN/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-07", "label": "JUL/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-08", "label": "AGO/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-09", "label": "SET/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-10", "label": "OUT/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-11", "label": "NOV/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2035-12", "label": "DEZ/35", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-01", "label": "JAN/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-02", "label": "FEV/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-03", "label": "MAR/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-04", "label": "ABR/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-05", "label": "MAI/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-06", "label": "JUN/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-07", "label": "JUL/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-08", "label": "AGO/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-09", "label": "SET/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-10", "label": "OUT/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-11", "label": "NOV/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2036-12", "label": "DEZ/36", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-01", "label": "JAN/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-02", "label": "FEV/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-03", "label": "MAR/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-04", "label": "ABR/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-05", "label": "MAI/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-06", "label": "JUN/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-07", "label": "JUL/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-08", "label": "AGO/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-09", "label": "SET/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-10", "label": "OUT/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-11", "label": "NOV/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2037-12", "label": "DEZ/37", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-01", "label": "JAN/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-02", "label": "FEV/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-03", "label": "MAR/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-04", "label": "ABR/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-05", "label": "MAI/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-06", "label": "JUN/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-07", "label": "JUL/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-08", "label": "AGO/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-09", "label": "SET/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-10", "label": "OUT/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-11", "label": "NOV/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2038-12", "label": "DEZ/38", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-01", "label": "JAN/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-02", "label": "FEV/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-03", "label": "MAR/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-04", "label": "ABR/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-05", "label": "MAI/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-06", "label": "JUN/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-07", "label": "JUL/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-08", "label": "AGO/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-09", "label": "SET/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-10", "label": "OUT/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-11", "label": "NOV/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2039-12", "label": "DEZ/39", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-01", "label": "JAN/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-02", "label": "FEV/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-03", "label": "MAR/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-04", "label": "ABR/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-05", "label": "MAI/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-06", "label": "JUN/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-07", "label": "JUL/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-08", "label": "AGO/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-09", "label": "SET/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-10", "label": "OUT/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-11", "label": "NOV/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2040-12", "label": "DEZ/40", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-01", "label": "JAN/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-02", "label": "FEV/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-03", "label": "MAR/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-04", "label": "ABR/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-05", "label": "MAI/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-06", "label": "JUN/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-07", "label": "JUL/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-08", "label": "AGO/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-09", "label": "SET/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-10", "label": "OUT/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-11", "label": "NOV/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2041-12", "label": "DEZ/41", "embasa": 0, "coelba": 0, "condominio": 265.53, "mensalidade": 971.11}, {"ym": "2042-01", "label": "JAN/42", "embasa": 0, "coelba": 0, "condominio": 0, "mensalidade": 0}], "fabrica": [{"item": "Maquina manual para blocos e pavimentos", "valor": 14200.0}, {"item": "Carrinho de garfo", "valor": 1100.0}, {"item": "Betoneira", "valor": 4980.0}, {"item": "Carreto", "valor": 2200.0}, {"item": "Desconto", "valor": -2780.0}, {"item": "CABO DUFLEX 6MM2 PT 750V CL5 70° RL INDUSCABOS", "valor": 603.5}, {"item": "2 sacos de cimento", "valor": 96.0}, {"item": "George - 2 Diarias Mais transporte ", "valor": 265.0}, {"item": "George - 1 Diaria Mais transporte", "valor": 130.0}], "mensal": {"2025-03": 31970.0, "2025-04": 36163.21, "2025-05": 3514.5, "2025-06": 9114.98, "2025-07": 16275.0, "2025-08": 6969.3, "2025-09": 4733.37, "2025-10": 19372.6, "2025-11": 11345.0, "2025-12": 7488.0, "2026-01": 13535.0, "2026-03": 535.47}};
+const PREM = { venda:280500, comissao:0.05, parcela:971.11, parcelas:193, condominio:265.53 };
+const LIM_PAGO = '2026-03';
+
+const brl = v => v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const k = v => 'R$ '+brl(v);
+const COR = {'Material':'#4E8CFF','Mão de obra':'#21E6C1','Frete/Carreto':'#A46BFF','Taxas/Projeto':'#FFC24B','Alimentação':'#FF8A5B','Serviços':'#5BD9FF','A classificar':'#FF4D6D'};
+const CATS = Object.keys(COR);
+const MES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+
+/* marca o que já foi pago conforme a regra confirmada */
+D.rec.forEach(x => { if(x.pago===undefined) x.pago = x.ym <= LIM_PAGO; });
+
+const T = {
+  lanc:   () => D.lanc.reduce((s,e)=>s+e.valor,0),
+  recPago:() => D.rec.filter(x=>x.pago).reduce((s,x)=>s+x.condominio+x.mensalidade+x.embasa+x.coelba,0),
+  recFut: () => D.rec.filter(x=>!x.pago).reduce((s,x)=>s+x.condominio+x.mensalidade+x.embasa+x.coelba,0),
+};
+
+/* ---------------- alertas ---------------- */
+function alerts(){
+  const semData = D.lanc.filter(e=>!e.data);
+  const a = [
+    ['crit','Obra sem registro há 5 meses',`Último lançamento em <b>04/03/2026</b>. Nada entre abril e agosto de 2026 — nem obra, nem água, nem luz.`],
+    ['crit','Lançamentos sem data',`<b>${semData.length}</b> registros pagos sem data (${k(semData.reduce((s,e)=>s+e.valor,0))}) não aparecem em nenhum mês do fluxo.`],
+    ['','Mensalidade: 193 ou 202 parcelas?',`O histórico diz <b>193</b> parcelas restantes; a projeção vai até dez/2041, <b>202</b> meses. Cerca de <b>R$ 8.740</b> em jogo.`],
+    ['','Água e luz de abr/26 não confirmadas',`<b>R$ 143,43</b> lançados e ainda não marcados como pagos. É a única diferença contra o total da versão anterior.`],
+  ];
+  document.getElementById('alerts').innerHTML = a.map(x=>
+    `<div class="alert ${x[0]}"><h4>${x[1]}</h4><p>${x[2]}</p></div>`).join('');
+}
+
+/* ---------------- KPIs ---------------- */
+function kpis(){
+  const lanc=T.lanc(), rp=T.recPago(), rf=T.recFut();
+  const custo=lanc+rp, com=PREM.venda*PREM.comissao;
+  const res=PREM.venda-com-custo, mg=res/PREM.venda*100;
+  const cards=[
+    ['a','Custo total da obra',k(custo),`lançamentos ${k(lanc)} + recorrentes pagos ${k(rp)}`,100],
+    ['','Valor de venda',k(PREM.venda),'<span class="tag">premissa fixa</span> valor de mercado',100],
+    ['c','Comissão de 5%','−'+k(com),'despesa deduzida, não acréscimo ao preço',100],
+    ['a','Resultado da venda',k(res),`<span class="tag">margem ${mg.toFixed(1)}%</span> sobre o valor de venda`,Math.max(mg,0)],
+    ['b','Compromisso futuro',k(rf),'<span class="tag">separado</span> fora do custo e da margem',100],
+    ['d','Custo da fábrica',k(20794.50),'<span class="tag">centro de custo próprio</span>',100],
+  ];
+  document.getElementById('kpis').innerHTML = cards.map(c=>
+    `<div class="kpi ${c[0]}"><div class="lab">${c[1]}</div><div class="val">${c[2]}</div>
+     <div class="foot">${c[3]}</div><div class="bar"><i style="width:${Math.min(c[4],100)}%"></i></div></div>`).join('');
+}
+
+/* ---------------- colunas 3D ---------------- */
+function cols(){
+  const ml={};
+  D.lanc.forEach(e=>{ if(e.data) ml[e.data.slice(0,7)]=(ml[e.data.slice(0,7)]||0)+e.valor; });
+  const mr={};
+  D.rec.filter(x=>x.pago).forEach(x=>mr[x.ym]=x.condominio+x.mensalidade+x.embasa+x.coelba);
+  const meses=[...new Set([...Object.keys(ml),...Object.keys(mr)])].sort();
+  const max=Math.max(...meses.map(m=>(ml[m]||0)+(mr[m]||0)));
+  document.getElementById('cols').innerHTML = meses.map(m=>{
+    const v=ml[m]||0, r=mr[m]||0, t=v+r, h=(t/max)*100, [y,mm]=m.split('-');
+    return `<div class="col"><div class="stack" style="height:${h}%">
+      <div class="cap">${brl(t/1000).replace(',00','')}k</div>
+      ${r?`<div class="seg" style="--c:#4E8CFF;height:${r/t*100}%;min-height:7px"></div>`:''}
+      ${v?`<div class="seg" style="--c:#21E6C1;height:${v/t*100}%"></div>`:''}
+      </div><div class="xlab">${MES[+mm-1]}<b>${y}</b></div></div>`;
+  }).join('');
+}
+
+/* ---------------- categorias ---------------- */
+function cats(){
+  const g={}; D.lanc.forEach(e=>g[e.cat]=(g[e.cat]||0)+e.valor);
+  const arr=Object.entries(g).sort((a,b)=>b[1]-a[1]);
+  const max=arr[0][1], tot=arr.reduce((s,x)=>s+x[1],0);
+  document.getElementById('cats').innerHTML = arr.map(([c,v])=>
+    `<div class="cat"><div class="r1"><span>${c}</span><em>${k(v)} · ${(v/tot*100).toFixed(1)}%</em></div>
+     <div class="track"><i style="--c:${COR[c]||'#7B90AE'};width:${v/max*100}%"></i></div></div>`).join('');
+}
+
+/* ---------------- tabelas ---------------- */
+const dbr = d => d ? d.slice(8,10)+'/'+d.slice(5,7)+'/'+d.slice(0,4) : '';
+function tblL(){
+  document.getElementById('tbL').innerHTML = D.lanc.map((e,i)=>`
+    <tr data-i="${i}">
+      <td><div class="cell" style="font-family:var(--mono);font-size:11px;color:var(--dim)">${String(i+1).padStart(3,'0')}</div></td>
+      <td><input class="mono" value="${dbr(e.data)}" placeholder="dd/mm/aaaa" data-f="data"
+          style="${e.data?'':'box-shadow:inset 0 0 0 1px rgba(255,77,109,.45)'}"></td>
+      <td><input value="${e.item.replace(/"/g,'&quot;')}" data-f="item"></td>
+      <td><div class="cell"><span class="chip" style="--c:${COR[e.cat]}">${e.cat}</span></div></td>
+      <td><div class="cell" style="font-family:var(--mono);font-size:11.5px;color:var(--mut)">${e.tipo}</div></td>
+      <td class="n"><input value="${brl(e.valor)}" data-f="valor"></td>
+      <td><div class="cell" style="padding:6px 8px"><button class="del">×</button></div></td>
+    </tr>`).join('');
+  document.getElementById('ftL').textContent = k(T.lanc());
+}
+function tblR(){
+  const vis = D.rec.filter(x=>x.ym<='2026-12');
+  document.getElementById('tbR').innerHTML = vis.map(x=>{
+    const [y,m]=x.ym.split('-'), t=x.condominio+x.mensalidade+x.embasa+x.coelba;
+    return `<tr data-ym="${x.ym}">
+      <td><div class="cell" style="font-family:var(--mono);font-size:12px">${MES[+m-1]}/${y.slice(2)}</div></td>
+      <td class="n"><input value="${brl(x.condominio)}" data-g="condominio"></td>
+      <td class="n"><input value="${brl(x.mensalidade)}" data-g="mensalidade"></td>
+      <td class="n"><input value="${brl(x.embasa)}" data-g="embasa"
+          style="${x.embasa?'':'box-shadow:inset 0 0 0 1px rgba(255,194,75,.4)'}"></td>
+      <td class="n"><input value="${brl(x.coelba)}" data-g="coelba"
+          style="${x.coelba?'':'box-shadow:inset 0 0 0 1px rgba(255,194,75,.4)'}"></td>
+      <td class="n"><div class="cell" style="text-align:right;font-family:var(--mono);color:#EAF4FF">${brl(t)}</div></td>
+      <td><div class="cell" style="padding:7px 13px"><span class="sw ${x.pago?'on':''}"><i></i></span></div></td><td></td>
+    </tr>`;}).join('');
+  document.getElementById('ftR').textContent = k(T.recPago());
+}
+function render(){ alerts(); kpis(); cols(); cats(); tblL(); tblR(); }
+
+/* ---------------- edição ---------------- */
+const num = s => parseFloat(String(s).replace(/\./g,'').replace(',','.'))||0;
+document.addEventListener('input',ev=>{
+  const tr=ev.target.closest('tr'); if(!tr) return;
+  if(tr.dataset.i!==undefined){
+    const e=D.lanc[+tr.dataset.i], f=ev.target.dataset.f;
+    if(f==='valor'){ e.valor=num(ev.target.value); }
+    else if(f==='data'){ const m=ev.target.value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/); if(m) e.data=m[3]+'-'+m[2]+'-'+m[1]; }
+    else e[f]=ev.target.value;
+  } else if(tr.dataset.ym){
+    const x=D.rec.find(z=>z.ym===tr.dataset.ym);
+    x[ev.target.dataset.g]=num(ev.target.value);
+  }
+  sujo(); kpis(); cols(); cats();
+  document.getElementById('ftL').textContent=k(T.lanc());
+  document.getElementById('ftR').textContent=k(T.recPago());
+});
+document.addEventListener('click',ev=>{
+  if(ev.target.closest('.sw')){
+    const tr=ev.target.closest('tr'), x=D.rec.find(z=>z.ym===tr.dataset.ym);
+    x.pago=!x.pago; ev.target.closest('.sw').classList.toggle('on',x.pago);
+    sujo(); kpis(); cols(); document.getElementById('ftR').textContent=k(T.recPago());
+  }
+  if(ev.target.classList.contains('del')){
+    const tr=ev.target.closest('tr');
+    if(confirm('Excluir este lançamento?')){ D.lanc.splice(+tr.dataset.i,1); sujo(); render(); }
+  }
+  const tb=ev.target.closest('.tab');
+  if(tb){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t===tb));
+    document.getElementById('viewL').style.display = tb.dataset.t==='l'?'':'none';
+    document.getElementById('viewR').style.display = tb.dataset.t==='r'?'':'none';
+  }
+});
+document.getElementById('btnNovo').onclick=()=>{
+  D.lanc.unshift({id:0,data:new Date().toISOString().slice(0,10),item:'',cat:'A classificar',valor:0,tipo:'Realizado'});
+  render(); sujo(); document.querySelector('#tbL input[data-f="item"]').focus();
+};
+
+/* ---------------- persistência na planilha do Drive ---------------- */
+/* =============== ARMAZENAMENTO ===============
+   Este painel e um arquivo estatico servido pelo GitHub Pages.
+   Nao existe servidor, banco nem planilha por tras dele.
+
+   - Os numeros nascem embutidos aqui mesmo, no const D acima.
+   - O que voce editar fica salvo no localStorage DESTE navegador,
+     neste dispositivo. Nao sincroniza com outro computador nem
+     com o celular, e some se voce limpar os dados do site.
+   - "Baixar backup" gera um .json com tudo. Guarde esse arquivo:
+     e a unica copia que sobrevive fora deste navegador.
+   - "Restaurar backup" le esse .json de volta.
+   ============================================== */
+const CHAVE = 'fazenda_reall_v1';
+
+let estado = 'carregando';
+
+function marca(txt, cor){
+  const s = document.getElementById('sync');
+  document.getElementById('syncTxt').textContent = txt;
+  s.style.borderColor = cor;
+}
+function sujo(){ estado = 'sujo'; marca('Alterações não salvas', 'rgba(255,194,75,.45)'); }
+
+const agora = () => new Date().toLocaleTimeString('pt-BR').slice(0,5);
+
+function carimbo(iso){
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR').slice(0,5);
+  } catch(e){ return '—'; }
+}
+
+function pacote(){
+  return { versao: 1, salvoEm: new Date().toISOString(), lanc: D.lanc, rec: D.rec };
+}
+
+function valido(j){
+  return j && Array.isArray(j.lanc) && Array.isArray(j.rec);
+}
+
+/* ---------- localStorage ---------- */
+
+function lerLocal(){
+  try {
+    const bruto = localStorage.getItem(CHAVE);
+    if(!bruto) return null;
+    const j = JSON.parse(bruto);
+    return valido(j) ? j : null;
+  } catch(e){
+    console.warn('localStorage indisponivel na leitura', e);
+    return null;
+  }
+}
+
+function gravarLocal(){
+  try {
+    localStorage.setItem(CHAVE, JSON.stringify(pacote()));
+    return true;
+  } catch(e){
+    console.error('localStorage indisponivel na gravacao', e);
+    return false;
+  }
+}
+
+function aplicar(j){
+  D.lanc = j.lanc;
+  D.rec  = j.rec;
+  D.rec.forEach(function(x){ if(x.pago === undefined) x.pago = x.ym <= LIM_PAGO; });
+  render();
+}
+
+function origem(txt){
+  const el = document.getElementById('rodapeOrigem');
+  if(el) el.textContent = txt;
+}
+
+/* ---------- ciclo de vida ---------- */
+
+function carregar(){
+  const j = lerLocal();
+  if(j){
+    aplicar(j);
+    estado = 'ok';
+    marca('Suas edições · salvo em ' + carimbo(j.salvoEm), 'rgba(33,230,193,.26)');
+    origem('ORIGEM · edições salvas neste navegador em ' + carimbo(j.salvoEm));
+  } else {
+    estado = 'ok';
+    marca('Dados originais do arquivo', 'rgba(78,140,255,.35)');
+    origem('ORIGEM · dados embutidos neste arquivo · nenhuma edição salva ainda');
+  }
+}
+
+function salvar(){
+  if(gravarLocal()){
+    estado = 'ok';
+    marca('Salvo neste navegador · ' + agora(), 'rgba(33,230,193,.26)');
+    origem('ORIGEM · edições salvas neste navegador em ' + carimbo(new Date().toISOString()));
+  } else {
+    estado = 'sujo';
+    marca('Não foi possível salvar neste navegador', 'rgba(255,77,109,.5)');
+  }
+}
+
+/* ---------- backup em arquivo ---------- */
+
+function exportar(){
+  try {
+    const txt = JSON.stringify(pacote(), null, 2);
+    const url = URL.createObjectURL(new Blob([txt], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'fazenda-reall-' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+    marca('Backup baixado · ' + agora(), 'rgba(33,230,193,.26)');
+  } catch(e){
+    marca('Falha ao gerar o backup', 'rgba(255,77,109,.5)');
+    console.error(e);
+  }
+}
+
+function importar(arquivo){
+  const fr = new FileReader();
+  fr.onload = function(){
+    try {
+      const j = JSON.parse(fr.result);
+      if(!valido(j)) throw new Error('estrutura invalida');
+      aplicar(j);
+      gravarLocal();
+      estado = 'ok';
+      marca('Backup restaurado · ' + j.lanc.length + ' lançamentos', 'rgba(33,230,193,.26)');
+      origem('ORIGEM · backup restaurado de ' + carimbo(j.salvoEm));
+    } catch(e){
+      marca('Arquivo inválido · nada foi alterado', 'rgba(255,77,109,.5)');
+      console.error(e);
+    }
+  };
+  fr.onerror = function(){ marca('Não foi possível ler o arquivo', 'rgba(255,77,109,.5)'); };
+  fr.readAsText(arquivo);
+}
+
+/* ---------- ligacoes ---------- */
+
+document.getElementById('btnSalvar').onclick = salvar;
+document.getElementById('btnExportar').onclick = exportar;
+
+document.getElementById('btnImportar').onclick = function(){
+  document.getElementById('arqImport').click();
+};
+document.getElementById('arqImport').onchange = function(ev){
+  const f = ev.target.files && ev.target.files[0];
+  if(f) importar(f);
+  ev.target.value = '';
+};
+
+/* descartar edicoes: exige dois cliques em 5s, sem caixa de dialogo */
+let armado = null;
+document.getElementById('btnLimpar').onclick = function(ev){
+  ev.preventDefault();
+  const el = ev.target;
+  if(armado){
+    clearTimeout(armado); armado = null;
+    try { localStorage.removeItem(CHAVE); } catch(e){ console.error(e); }
+    el.textContent = 'descartar edições locais';
+    location.reload();
+    return;
+  }
+  el.textContent = 'clique de novo para confirmar';
+  armado = setTimeout(function(){
+    armado = null;
+    el.textContent = 'descartar edições locais';
+  }, 5000);
+};
+
+setInterval(function(){ if(estado === 'sujo') salvar(); }, 120000);
+
+render(); carregar();
+</script>
+</body>
+</html>
